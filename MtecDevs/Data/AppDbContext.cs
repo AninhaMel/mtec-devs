@@ -16,6 +16,7 @@ namespace MtecDevs.Data;
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        AppDbSeed seed = new(builder);
     }
     
 
