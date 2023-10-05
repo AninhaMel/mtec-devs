@@ -70,12 +70,34 @@ namespace MtecDevs.Data;
 
                 }
             };
+            // Criptografar a senha do IdentityUser
+            foreach (var user in users)
+            {
+                PasswordHasher<IdentityUser> password = new();
+                user.PasswordHash = password.HashPassword(user, "@Etec123");
+            }
             builder.Entity<IdentityUser>().HasData(users);
-            // Criptografar
 
             //Cria o usuário
+            List<Usuario> usuarios = new(){
+                new Usuario() {
+                    UserId = users[0].Id,
+                    Nome = "José Antonio Gallo Junior",
+                    DataNascimento = DateTime.Parse("05/08/1981"),
+                    Foto = "/img/usuarios/avatar.png",
+                    TipoDevId = 2
+                }
+            };
+            builder.Entity<Usuario>().HasData(usuarios);
 
             // Definir o perfil do usuário criado
+            List<IdentityUserRole<string>> userRoles = new() {
+                new IdentityUserRole<string>() {
+                    UserId = users[0].Id,
+                    RoleId = perfis[0].Id
+                }
+            };
+            builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
             #endregion
 
         }
