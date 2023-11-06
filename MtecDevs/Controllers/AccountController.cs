@@ -1,25 +1,58 @@
+using System.Net.Mail;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MtecDevs.ViewModels;
 
 namespace MtecDevs.Controllers;
 
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+    
 
-        public AccountController(ILogger<AccountController> logger)
+        public AccountController(
+            ILogger<AccountController> logger, 
+            SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager)
         {
             _logger = logger;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-            return View();
+            LoginVM loginVM = new() {
+                UrlRetorno = returnUrl ?? Url.Content("~/")
+            };
+            return View(loginVM);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult>Login(LoginVM login)
+        {
+            if (ModelState.IsValid)
+            {
+                //Verifico o login
+                
+            }
+            return View(login);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        private static bool IsValidEmail(string email)
         {
-            return View("Error!");
+            try
+            {
+                MailAddress m = new(email);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
+
